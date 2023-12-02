@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">FRP Dice Roller App</string>
+    <string name="roll_text">Roll</string>
+    <string-array name="dropdown_items">
+        <item>D4</item>
+        <item>D6</item>
+        <item>D8</item>
+        <item>D10</item>
+        <item>D12</item>
+        <item>D20</item>
+    </string-array>
+</resources>
