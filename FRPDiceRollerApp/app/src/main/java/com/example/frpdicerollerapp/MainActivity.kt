@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.frpdicerollerapp.model.DiceViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -22,12 +23,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DiceRoller()
+            DiceRollerApp()
         }
     }
 
     @Composable
-    fun DiceRoller(diceViewModel: DiceViewModel = viewModel()) {
+    fun DiceRollerApp(diceViewModel: DiceViewModel = viewModel()) {
         val diceOptions = resources.getStringArray(R.array.dropdown_items).toList()
         val rollText = resources.getString(R.string.roll_text)
 
@@ -39,10 +40,12 @@ class MainActivity : ComponentActivity() {
                 .padding(16.dp)
         ) {
             Text("Select Dice:" ,style = MaterialTheme.typography.headlineSmall)
+
             DisplayQuantityButtons(onQuantitySelected = { i -> diceViewModel.currentQuantity = i})
+
             Spacer(Modifier.height(16.dp))
 
-            DropdownMenuDies(
+            DisplayDropDownDies(
                 options = diceOptions,
                 selectedOptions = diceViewModel.selectedDiceList,
                 onDiceSelected = { dice,isSelected ->
@@ -50,6 +53,7 @@ class MainActivity : ComponentActivity() {
                 }
             )
             Text("Quantity Amount: ${diceViewModel.currentQuantity}",style = MaterialTheme.typography.headlineSmall)
+
             Spacer(Modifier.height(100.dp))
 
             Column(
@@ -59,17 +63,15 @@ class MainActivity : ComponentActivity() {
                 DisplayDieResultText(diceViewModel)
             }
             Spacer(Modifier.height(100.dp))
+
             Text("Selected Die(s): ${
                 diceViewModel.selectedDiceList.groupingBy { it }.eachCount()
                     .entries.joinToString { "${it.key} x${it.value}" }
             }", style = MaterialTheme.typography.titleLarge)
 
             Spacer(Modifier.height(5.dp))
-            Button(onClick = { diceViewModel.rollDice() },
-                modifier = Modifier.width(100.dp)
-                .height(50.dp)) {
-                Text(rollText)
-            }
+
+            DisplayRollButton(diceViewModel = diceViewModel, rollText = rollText)
 
             Spacer(Modifier.height(16.dp))
 
@@ -77,7 +79,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun DropdownMenuDies(
+    fun DisplayDropDownDies(
         options: List<String>,
         selectedOptions: List<String>,
         onDiceSelected: (String, Boolean) -> Unit
@@ -155,12 +157,22 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    fun DisplayRollButton(diceViewModel : DiceViewModel,rollText : String){
+        Button(onClick = { diceViewModel.rollDice() },
+            modifier = Modifier
+                .width(100.dp)
+                .height(50.dp)) {
+            Text(rollText)
+        }
+    }
+
 
 
     @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {
-        DiceRoller()
+        DiceRollerApp()
     }
 
 }
